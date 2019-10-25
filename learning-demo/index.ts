@@ -686,21 +686,134 @@
 //   return source.search(subString) !== -1;
 // }
 // 一个函数还可以有自己的属性和方法
-interface Counter {
-  (start: number): string;
-  interval: number;
-  reset(): void;
-}
+// interface Counter {
+//   (start: number): string;
+//   interval: number;
+//   reset(): void;
+// }
 
-function getCounter(): Counter {
-  let counter = <Counter>function (start: number) { };
-  counter.interval = 123;
-  counter.reset = function () { };
-  return counter;
-}
+// function getCounter(): Counter {
+//   let counter = <Counter>function (start: number) { };
+//   counter.interval = 123;
+//   counter.reset = function () { };
+//   return counter;
+// }
 
-let c = getCounter();
-c(10);
-c.reset();
-c.interval = 5.0;
+// let c = getCounter();
+// c(10);
+// c.reset();
+// c.interval = 5.0;
 
+
+
+// 泛型
+// 在定义函数，接口或类的时候，不预先指定具体的类型，而在使用的时候再指定类型的一种特性
+// function createArray(length: number, value: any):Array<any> {
+//   let result = [];
+//   for(let i:number = 0; i < length; i++){
+//     result[i] = value;
+//   }
+//   return result;
+// }
+// createArray(3, 'x');
+// 缺陷： 没有准确的定义返回的类型
+// 使用泛型<T>
+// function createArray<T>(length: number, value: T): Array<T> {
+//   let result: T[] = [];
+//   for(let i = 0; i < length; i++){
+//     result[i] = value;
+//   }
+//   return result;
+// }
+// createArray(3, 'kasdhf');
+// createArray<string>(3, 'kasdhf');
+
+// 多个类型参数
+// function swap<T, U>(tuple: [T, U]): [U, T]{
+//   return [tuple[1], tuple[0]];
+// }
+// swap([7, 'seven'])
+
+// 泛型约束
+// interface ILengthwise {
+//   length: number;
+// }
+// function loggingIdentity<T extends ILengthwise> (arg: T): T{
+//   console.log(arg.length);
+//   return arg;
+// }
+// loggingIdentity({
+//   length: 23234
+// })
+
+// function copyFields<T extends U, U>(target: T, source: U): T {
+//   for(let id in source){
+//     target[id] = (<T>source)[id];
+//   }
+//   return target;
+// }
+// let x = { a: 1, b: 2, c: 3, d: 4 };
+
+// copyFields(x, { b: 10, d: 20 });
+
+// 泛型接口
+// interface CreateArrayFunc {
+//   <T>(length: number, value: T):T[];
+// }
+// let createArray: CreateArrayFunc;
+// createArray = function <T>(length: number, value: T):T[]{
+//   let result: T[] = [];
+//     for (let i = 0; i < length; i++) {
+//         result[i] = value;
+//     }
+//     return result;
+// }
+// // ======> 等价如下：
+// let func:<T>(length: number, value: T) => T[] = function<T>(length: number, value: T):T[]{
+//   let result: T[] = [];
+//   for (let i = 0; i < length; i++) {
+//       result[i] = value;
+//   }
+//   return result;
+// }
+
+
+// 把泛型参数提前到接口名上  此时在使用泛型接口的时候，需要定义泛型的类型。
+// interface CreateArrayFunc<T> {
+//   // (length: number, value: T): T[];
+//   (length: number, value: T): Array<T>;
+// }
+
+// let createArray: CreateArrayFunc<any>;
+// createArray = function<T>(l: number, v: T):T[]{
+//   let result: T[] = [];
+//   for(let i = 0; i < l; i++){
+//     result.push(v);
+//   }
+//   return result;
+// }
+// createArray(3, 'x'); // ['x', 'x', 'x']
+
+// 泛型类 (泛型也可以用于类的类型定义中)
+// class GenericNumber<T> {
+//   zeroValue: T;
+//   constructor(zeroValue: T){
+//     this.zeroValue = zeroValue;
+//   }
+//   add: (x: T, y: T) => T = function(x: T, y: T){
+//     return x;
+//   }
+// }
+
+// let myGenericNumber = new GenericNumber<number>(0);
+// myGenericNumber.add = function(x, y) { return x + y; };
+
+// 泛型参数的默认类型
+// function createArray<T = string>(length: number, value: T): Array<T> {
+//   let result: T[] = [];
+//   for (let i = 0; i < length; i++) {
+//       result[i] = value;
+//   }
+//   return result;
+// }
+// createArray(3, 8)
