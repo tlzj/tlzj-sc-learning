@@ -477,3 +477,230 @@
 // /// <reference /> 三斜线指令
 
 // 声明语句中只能定义类型，切勿在声明语句中定义具体的实现
+
+
+// 2019/10/22 ts进阶部分
+// 类型别名
+// type Name = string;
+// type NameResolve = () => string;
+// type NameOrResolve = Name | NameResolve;
+// function getName(n: NameOrResolve): Name {
+//   if(typeof n == 'string'){
+//     return n;
+//   }else {
+//     return n();
+//   }
+// }
+
+// 字符串字面量类型
+// type EventNames = 'click' | 'scroll' | 'mousemove';
+// function handleEvent(ele: Element, event: EventNames) {
+//     // do something
+// }
+
+// handleEvent(document.getElementById('hello'), 'scroll');  // 没问题
+
+// 元组 数组合并了相同类型的对象，而元组（Tuple）合并了不同类型的对象。
+// let tom: [string, number] = ['Tom', 25];
+
+// // 注： 
+// 1.但是当直接对元组类型的变量进行初始化或者赋值的时候，需要提供所有元组类型中指定的项。
+// 2.当添加越界的元素时，它的类型会被限制为元组中每个类型的联合类型：
+// let tom1: [string, boolean];
+// tom1 = [ 'Tom' ] // 报错，缺少boolean
+
+
+
+// 枚举：用于取值限定在一定范围内的场景，比如一周只能有七天，颜色限定为红绿蓝等
+// enum Days {
+//   Sun, Mon, Tue, Wed, Thu, Fri, Sat
+// }
+
+// console.log(Days["Sun"] === 0); // true
+// console.log(Days["Mon"] === 1); // true
+// console.log(Days["Tue"] === 2); // true
+// console.log(Days["Sat"] === 6); // true
+
+// console.log(Days[0] === "Sun"); // true
+// console.log(Days[1] === "Mon"); // true
+// console.log(Days[2] === "Tue"); // true
+// console.log(Days[6] === "Sat"); // true
+// 手动赋值
+// enum Days {
+//   Sun=7, Mon=1, Tue, Wed, Thu, Fri, Sat
+// }
+
+// console.log(Days["Sun"] === 7); // true
+// console.log(Days["Mon"] === 1); // true
+// console.log(Days["Tue"] === 2); // true
+// console.log(Days["Sat"] === 6); // true
+// 手动赋值的枚举项可以不是数字，此时需要使用类型断言来让 tsc 无视类型检查
+// enum Days {
+//   Sun=7, Mon, Tue, Wed, Thu, Fri, Sat='S' as any // 类型断言 <类型>值 或 值 as 类型
+// }
+
+// enum Color {Red, Green, Blue = "blue".length};
+// 常数枚举是使用 const enum 定义的枚举类型： 不能包含计算成员 假如包含了计算成员，则会在编译阶段报错：
+// const enum Directions {
+//   Up,
+//   Down,
+//   Left,
+//   Right
+// }
+
+// let directions = [Directions.Up, Directions.Down, Directions.Left, Directions.Right];
+
+// 外部枚举（Ambient Enums）是使用 declare enum 定义的枚举类型：
+// declare enum Directions {
+//   Up,
+//   Down,
+//   Left,
+//   Right
+// }
+
+// let directions = [Directions.Up, Directions.Down, Directions.Left, Directions.Right];
+
+
+// 类
+/**
+ * 面向对象（OOP）的三大特性：封装、继承、多态
+ * 封装（Encapsulation）：将对数据的操作细节隐藏起来，只暴露对外的接口。
+ *                        外界调用端不需要（也不可能）知道细节，就能通过对外提供的接口来访问该对象，
+ *                          同时也保证了外界无法任意更改对象内部的数据
+ * 继承（Inheritance）：子类继承父类，子类除了拥有父类的所有特性外，还有一些更具体的特性
+ * 多态（Polymorphism）：由继承而产生了相关的不同的类，
+ *                      对同一个方法可以有不同的响应。比如 Cat 和 Dog 都继承自 Animal，但是分别实现了自己的 eat 方法。
+ *                      此时针对某一个实例，我们无需了解它是 Cat 还是 Dog，
+ *                       就可以直接调用 eat 方法，程序会自动判断出来应该如何执行 eat
+ */
+
+ // ts中类的用法： public private 和 protected
+
+//  public 修饰的属性或方法是公有的，可以在任何地方被访问到，默认所有的属性和方法都是 public 的
+//  private 修饰的属性或方法是私有的，不能在声明它的类的外部访问
+//  protected(不能在子类中访问) 修饰的属性或方法是受保护的，它和 private 类似，区别是它在子类中也是允许被访问的
+// class Animal {
+//   public name: string;
+//   public constructor(name: string){
+//     this.name = name;
+//   }
+//   public fun(){
+//     this.sayHi()
+//   }
+//   private sayHi (){
+//     console.log('hello');
+//   }
+// }
+// let a = new Animal('Tom');
+// a.fun()
+// // a.sayHi() // 报错
+
+// 修饰符还可以使用在构造函数参数中，等同于类中定义该属性，使代码更简洁。
+// class Animal {
+//   // public name: string;
+//   public constructor(public name: string){
+//     this.name = name;
+//   }
+// }
+
+// 抽象类(abstract) 抽象类是不允许被实例化, 可以用于继承 抽象类中的抽象方法必须被子类实现
+// abstract class Animal {
+//   public readonly name: string;
+//   public constructor(name: string, public readonly age: number){
+//     this.name = name;
+//     this.age = age;
+//   }
+//   public abstract sayHi():any;
+// }
+
+// class Cat extends Animal {
+//   constructor(name: string, age: number){
+//     super(name, age);
+//   }
+//   public eat(){
+//     console.log('cat');
+//   }
+//   public sayHi(){
+//     // 如果不写该函数，会报错，因为抽象类的抽象方法必须被子类实现
+//   }
+// }
+
+// let cat = new Cat('tom', 2);
+
+// 类与接口 对类的一部分行为进行抽象  类实现(implements)接口
+// interface IAlarm {
+//   alert():any;
+// }
+// interface Light {
+//   lightOn():any;
+// }
+// class Door {
+
+// }
+// class SecurityDoor extends Door implements IAlarm, Light {
+//   alert(){
+//     console.log('SecurityDoor alert');
+//   }
+//   lightOn(){
+//     // do something...
+//   }
+// }
+// class Car implements IAlarm {
+//   alert(){
+//     console.log('Car alert');
+//   }
+// }
+
+// // 接口继承接口
+// interface Alarm {
+//   alert():any;
+// }
+// interface LightableAlarm extends Alarm {
+//   lightOn(): any;
+// }
+
+// 接口继承类
+// class Point {
+//   x: number;
+//   y: number;
+//   constructor(x:number, y: number){
+//     this.x = x;
+//     this.y = y;
+//   }
+// }
+// interface Point3d extends Point {
+//   z: number;
+// }
+// let point3d: Point3d = {
+//   x: 1,
+//   y: 2,
+//   z: 3
+// }
+
+// 混合类型  使用接口的方式来定义一个函数需要符合的形状
+// interface SearchFunc {
+//   (source: string, subString:string ): boolean;
+// }
+// let mySearch: SearchFunc;
+// mySearch = function(source: string, subString: string){
+//   return source.search(subString) !== -1;
+// }
+// 一个函数还可以有自己的属性和方法
+interface Counter {
+  (start: number): string;
+  interval: number;
+  reset(): void;
+}
+
+function getCounter(): Counter {
+  let counter = <Counter>function (start: number) { };
+  counter.interval = 123;
+  counter.reset = function () { };
+  return counter;
+}
+
+let c = getCounter();
+c(10);
+c.reset();
+c.interval = 5.0;
+
