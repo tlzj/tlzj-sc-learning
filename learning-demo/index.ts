@@ -596,12 +596,12 @@
 // // a.sayHi() // 报错
 
 // 修饰符还可以使用在构造函数参数中，等同于类中定义该属性，使代码更简洁。
-// class Animal {
-//   // public name: string;
-//   public constructor(public name: string){
-//     this.name = name;
-//   }
-// }
+class Animal {
+  // public name: string;
+  public constructor(public name: string){
+    this.name = name;
+  }
+}
 
 // 抽象类(abstract) 抽象类是不允许被实例化, 可以用于继承 抽象类中的抽象方法必须被子类实现
 // abstract class Animal {
